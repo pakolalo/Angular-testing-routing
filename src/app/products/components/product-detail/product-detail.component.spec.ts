@@ -7,7 +7,7 @@ import { generateOneProduct } from 'src/app/models/product.mock';
 
 import { ProductDetailComponent } from './product-detail.component';
 
-fdescribe('ProductDetailComponent', () => {
+describe('ProductDetailComponent', () => {
   let component: ProductDetailComponent;
   let fixture: ComponentFixture<ProductDetailComponent>;
   let route: ActivatedRouteStub;
