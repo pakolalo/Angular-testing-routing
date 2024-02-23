@@ -3,6 +3,17 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
 import { RouterLinkDirectiveStub, queryAllByDirective } from 'src/testing';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Component({
+  selector:'app-banner'
+})
+class BannerComponentStub {}
+
+@Component({
+  selector:'app-foter'
+})
+class FooterComponentStub {}
 
 fdescribe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -16,7 +27,10 @@ fdescribe('AppComponent', () => {
       declarations: [
         AppComponent,
         RouterLinkDirectiveStub,
+        BannerComponentStub,
+        FooterComponentStub,
       ],
+      //schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
