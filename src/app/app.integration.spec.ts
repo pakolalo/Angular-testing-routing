@@ -4,38 +4,8 @@ import { AppComponent } from "./app.component";
 import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { Router, RouterLinkWithHref } from "@angular/router";
 import { clickElement, query, queryAllByDirective } from "src/testing";
-
-@Component({
-  selector: 'app-pico-preview'
-})
-class PicoPreviewComponent {};
-
-@Component({
-  selector: 'app-people'
-})
-class PeopleComponent {};
-
-@Component({
-  selector: 'app-others'
-})
-class OthersComponent {};
-
-
-const routes = [
-  {
-    path: 'pico-preview',
-    component: PicoPreviewComponent
-  },
-  {
-    path: 'people',
-    component: PeopleComponent
-  },
-  {
-    path: 'others',
-    component: OthersComponent
-  },
-]
-
+import { routes } from "./app-routing.module";
+import { AppModule } from "./app.module";
 
 fdescribe('App Integration test', () => {
 
@@ -46,13 +16,8 @@ fdescribe('App Integration test', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        AppModule,
         RouterTestingModule.withRoutes(routes),
-      ],
-      declarations: [
-        AppComponent,
-        PeopleComponent,
-        PicoPreviewComponent,
-        OthersComponent,
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -88,6 +53,17 @@ fdescribe('App Integration test', () => {
 
     expect(router.url).toEqual('/others');
     const element = query(fixture, 'app-others');
+    expect(element).not.toBeNull();
+  }));
+
+  it('should render PeopleComponet when clicked', fakeAsync(() => {
+    clickElement(fixture, 'people-link', true);
+
+    tick(); //wait while nav...
+    fixture.detectChanges(); // ngOnInit - OtherComponent
+
+    expect(router.url).toEqual('/people');
+    const element = query(fixture, 'app-people');
     expect(element).not.toBeNull();
   }));
 
