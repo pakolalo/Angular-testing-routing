@@ -11,7 +11,7 @@ import { generateManyProducts } from "./models/product.mock";
 import { AuthService } from "./services/auth.service";
 import { generateOneUser } from "./models/user.mock";
 
-fdescribe('App Integration test', () => {
+describe('App Integration test', () => {
 
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
