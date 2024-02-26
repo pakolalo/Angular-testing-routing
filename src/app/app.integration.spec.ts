@@ -3,21 +3,29 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { AppComponent } from "./app.component";
 import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { Router, RouterLinkWithHref } from "@angular/router";
-import { clickElement, query, queryAllByDirective } from "src/testing";
+import { asyncData, clickElement, getText, query, queryAllByDirective } from "src/testing";
 import { routes } from "./app-routing.module";
 import { AppModule } from "./app.module";
+import { ProductsService } from "./services/product.service";
+import { generateManyProducts } from "./models/product.mock";
 
 fdescribe('App Integration test', () => {
 
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
   let router: Router;
+  let productService: jasmine.SpyObj<ProductsService>;
 
   beforeEach(async () => {
+    const productServiceSpy = jasmine.createSpyObj('ProductsService', ['getAll']);
+
     await TestBed.configureTestingModule({
       imports: [
         AppModule,
         RouterTestingModule.withRoutes(routes),
+      ],
+      providers: [
+        { provide: ProductsService, useValue: productServiceSpy },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -29,6 +37,7 @@ fdescribe('App Integration test', () => {
     fixture.detectChanges();
     //providers
     router = TestBed.inject(Router);
+    productService = TestBed.inject(ProductsService) as jasmine.SpyObj<ProductsService>;
 
     router.initialNavigation();
 
@@ -46,14 +55,22 @@ fdescribe('App Integration test', () => {
   });
 
   it('should render OthersComponet when clicked', fakeAsync(() => {
+    const productsMocks = generateManyProducts(10);
+    productService.getAll.and.returnValue(asyncData(productsMocks));
+
     clickElement(fixture, 'others-link', true);
 
     tick(); //wait while nav...
     fixture.detectChanges(); // ngOnInit - OtherComponent
 
+    tick();
+    fixture.detectChanges();
+
     expect(router.url).toEqual('/others');
     const element = query(fixture, 'app-others');
     expect(element).not.toBeNull();
+    const text = getText(fixture, 'products-lenght');
+    expect(text).toContain(productsMocks.length);
   }));
 
   it('should render PeopleComponet when clicked', fakeAsync(() => {
